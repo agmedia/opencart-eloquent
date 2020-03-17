@@ -9,7 +9,6 @@
             "email": "filip@agmedia.hr"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "php": ">=5.5",
         "illuminate/database": "^5.6"
