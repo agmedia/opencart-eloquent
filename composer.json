@@ -3,6 +3,8 @@
     "description": "Illuminate/database eloquent package for Opencart. With some predefined models and helpers.",
     "license": "MIT",
     "homepage": "https://agmedia.hr",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Filip Jankoski",
