@@ -17,10 +17,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Agmedia\\": "src/Agmedia"
+            "Agmedia\\": "src"
         },
         "files": [
-            "helpers.php"
+            "src/helpers.php"
         ]
     }
 }
