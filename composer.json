@@ -18,9 +18,6 @@
     "autoload": {
         "psr-4": {
             "Agmedia\\": "src"
-        },
-        "files": [
-            "src/helpers.php"
-        ]
+        }
     }
 }
