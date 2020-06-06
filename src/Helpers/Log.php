@@ -8,25 +8,87 @@
 namespace Agmedia\Helpers;
 
 
-class Log {
-
+class Log
+{
+    
     /**
-     * Logs the data with month folders and
-     * day concat to file name.
-     *
-     * @param $message
+     * @param        $message
      * @param string $filename
      */
-    public static function info($message, $filename = 'info') {
+    public static function error($message, $filename = 'error_')
+    {
+        return self::store($message, $filename);
+    }
+    
+    
+    /**
+     * @param        $message
+     * @param string $filename
+     */
+    public static function warning($message, $filename = 'warning_')
+    {
+        return self::store($message, $filename);
+    }
+    
+    
+    /**
+     * @param        $message
+     * @param string $filename
+     */
+    public static function notice($message, $filename = 'notice_')
+    {
+        return self::store($message, $filename);
+    }
+    
+    
+    /**
+     * @param        $message
+     * @param string $filename
+     */
+    public static function info($message, $filename = 'info_')
+    {
+        return self::store($message, $filename);
+    }
+    
+    
+    /**
+     * @param        $message
+     * @param string $filename
+     */
+    public static function debug($message, $filename = 'debug_')
+    {
+        return self::store($message, $filename);
+    }
+    
+    
+    /**
+     * Log messages.
+     *
+     * @param        $message
+     * @param string $filename
+     */
+    public static function store($message, $filename)
+    {
+        $year  = date('Y');
         $month = date('m');
-        $day = date('d');
-
-        if (!is_dir(DIR_LOGS . $month)) {
-            mkdir(DIR_LOGS . $month, 0755, true);
+        $day   = date('d');
+        
+        $path = DIR_LOGS/* . 'store/'*/;
+        
+        if ( ! is_dir($path . $year)) {
+            mkdir($path . $year, 0755, true);
+            
+            if ( ! is_dir($path . $year . '/' . $month)) {
+                mkdir($path . $year . '/' . $month, 0755, true);
+                
+                if ( ! is_dir($path . $year . '/' . $month . '/' . $day)) {
+                    mkdir($path . $year . '/' . $month . '/' . $day, 0755, true);
+                }
+            }
         }
-
-        $handle = fopen(DIR_LOGS . $month . '/' . $filename . '_' . $day . '.log', 'a');
-
+        
+        $handle = fopen($path . $year . '/' . $month . '/' . $day . '/' . $filename . '.log', 'a');
+        
         fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
         fclose($handle);
     }
