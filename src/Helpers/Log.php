@@ -15,9 +15,9 @@ class Log
      * @param        $message
      * @param string $filename
      */
-    public static function error($message, $filename = 'error_')
+    public static function error($message, $filename = '')
     {
-        return self::store($message, $filename);
+        return self::catalog($message, 'error_' . $filename);
     }
     
     
@@ -25,9 +25,9 @@ class Log
      * @param        $message
      * @param string $filename
      */
-    public static function warning($message, $filename = 'warning_')
+    public static function warning($message, $filename = '')
     {
-        return self::store($message, $filename);
+        return self::catalog($message, 'warning_' . $filename);
     }
     
     
@@ -35,9 +35,9 @@ class Log
      * @param        $message
      * @param string $filename
      */
-    public static function notice($message, $filename = 'notice_')
+    public static function notice($message, $filename = '')
     {
-        return self::store($message, $filename);
+        return self::catalog($message, 'notice_' . $filename);
     }
     
     
@@ -45,9 +45,9 @@ class Log
      * @param        $message
      * @param string $filename
      */
-    public static function info($message, $filename = 'info_')
+    public static function info($message, $filename = '')
     {
-        return self::store($message, $filename);
+        return self::catalog($message, 'info_' . $filename);
     }
     
     
@@ -55,41 +55,78 @@ class Log
      * @param        $message
      * @param string $filename
      */
-    public static function debug($message, $filename = 'debug_')
+    public static function debug($message, $filename = '')
     {
-        return self::store($message, $filename);
+        return self::catalog($message, 'debug_' . $filename);
     }
     
     
     /**
-     * Log messages.
+     * Used for testing and debuging tasks.
      *
      * @param        $message
      * @param string $filename
      */
-    public static function store($message, $filename)
+    public static function test($message, $filename = 'test')
+    {
+        $handle = fopen(DIR_LOGS . $filename . '.log', 'a');
+        fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
+        fclose($handle);
+    }
+    
+    
+    /**
+     * Logs the data with year/month/ folders and
+     * day concat to file name.
+     *
+     * @param        $message
+     * @param string $filename
+     */
+    public static function catalog($message, $filename = 'agmedia')
     {
         $year  = date('Y');
         $month = date('m');
         $day   = date('d');
         
-        $path = DIR_LOGS/* . 'store/'*/;
+        $path = DIR_LOGS . $year . '/';
         
-        if ( ! is_dir($path . $year)) {
-            mkdir($path . $year, 0755, true);
-            
-            if ( ! is_dir($path . $year . '/' . $month)) {
-                mkdir($path . $year . '/' . $month, 0755, true);
-                
-                if ( ! is_dir($path . $year . '/' . $month . '/' . $day)) {
-                    mkdir($path . $year . '/' . $month . '/' . $day, 0755, true);
-                }
-            }
+        if ( ! is_dir($path . $month)) {
+            mkdir($path . $month, 0755, true);
         }
         
-        $handle = fopen($path . $year . '/' . $month . '/' . $day . '/' . $filename . '.log', 'a');
+        $handle = fopen($path . $month . '/' . $filename . '_' . $day . '.log', 'a');
         
         fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
         fclose($handle);
+    }
+    
+    
+    /**
+     * Deprecated function.
+     * Should not be used.
+     *
+     * @param        $message
+     * @param string $filename
+     *
+     * @return mixed
+     */
+    public function write($message, $filename = 'write')
+    {
+        return $this->write($message, $filename);
+    }
+    
+    
+    /**
+     * Deprecated function.
+     * Should not be used.
+     *
+     * @param        $message
+     * @param string $filename
+     *
+     * @return mixed
+     */
+    public function store($message, $filename = 'store')
+    {
+        return $this->write($message, $filename);
     }
 }
