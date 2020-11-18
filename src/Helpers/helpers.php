@@ -49,3 +49,26 @@ if ( ! function_exists('agconf')) {
         return $response;
     }
 }
+
+/**
+ * Shortcut to \Agmedia\Models\Product\Product() query.
+ * Parameter should be integer, array or Collection of ID's.
+ *
+ * @param null $ids
+ *
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+if ( ! function_exists('products')) {
+    function products($ids = null)
+    {
+        if ( ! $ids) {
+            return (new \Agmedia\Models\Product\Product())->newQuery();
+        }
+        
+        if (is_array($ids) || is_a($ids, \Illuminate\Support\Collection::class)) {
+            return (new \Agmedia\Models\Product\Product())->whereIn('product_id', $ids)->newQuery();
+        }
+        
+        return (new \Agmedia\Models\Product\Product())->where('product_id', $ids)->newQuery();
+    }
+}
