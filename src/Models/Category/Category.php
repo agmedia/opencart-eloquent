@@ -4,6 +4,7 @@
 namespace Agmedia\Models\Category;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -51,33 +52,46 @@ class Category extends Model
         return $this->hasOne(CategoryDescription::class, 'category_id', 'category_id')->where('language_id', $language_id);
     }
     
+    /**
+     * Query scope methods
+     */
     
     /**
-     * @param $categories - Should be array or integer.
+     * @param      $query
+     * @param null $categories - Should be array or integer.
      *
      * @return mixed
      */
-    public function activate($categories)
+    public function scopeActivate($query, $categories = null)
     {
-        if (is_array($categories)) {
-            return $this->whereIn('product_id', $categories)->update(['status' => 1]);
+        if ( ! $categories) {
+            return $query->update(['status' => 1]);
         }
         
-        return $this->where('product_id', $categories)->update(['status' => 1]);
+        if (is_array($categories) || is_a($categories, Collection::class)) {
+            return $query->whereIn('category_id', $categories)->update(['status' => 1]);
+        }
+        
+        return $query->where('category_id', $categories)->update(['status' => 1]);
     }
     
     
     /**
-     * @param $categories - Should be array or integer.
+     * @param      $query
+     * @param null $categories - Should be array or integer.
      *
      * @return mixed
      */
-    public function deactivate($categories)
+    public function scopeDeactivate($query, $categories = null)
     {
-        if (is_array($categories)) {
-            return $this->whereIn('product_id', $categories)->update(['status' => 0]);
+        if ( ! $categories) {
+            return $query->update(['status' => 0]);
         }
         
-        return $this->where('product_id', $categories)->update(['status' => 0]);
+        if (is_array($categories) || is_a($categories, Collection::class)) {
+            return $query->whereIn('category_id', $categories)->update(['status' => 0]);
+        }
+        
+        return $query->where('category_id', $categories)->update(['status' => 0]);
     }
 }

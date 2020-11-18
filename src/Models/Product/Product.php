@@ -4,8 +4,8 @@
 namespace Agmedia\Models\Product;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 class Product extends Model
 {
@@ -31,7 +31,6 @@ class Product extends Model
     protected $guarded = [
         'product_id'
     ];
-    
     
     /**
      * Relations methods
@@ -79,37 +78,44 @@ class Product extends Model
         return ProductOption::where('product_id', $this->product_id)->pluck('sku');
     }
     
-    /**
-     * Custom methods
-     */
     
     /**
-     * @param $products - Should be array or integer.
+     * @param      $query
+     * @param null $products - Should be array or integer.
      *
      * @return mixed
      */
-    public function activate($products)
+    public function scopeActivate($query, $products = null)
     {
-        if (is_array($products)) {
-            return $this->whereIn('product_id', $products)->update(['status' => 1]);
+        if ( ! $products) {
+            return $query->update(['status' => 1]);
         }
         
-        return $this->where('product_id', $products)->update(['status' => 1]);
+        if (is_array($products) || is_a($products, Collection::class)) {
+            return $query->whereIn('product_id', $products)->update(['status' => 1]);
+        }
+        
+        return $query->where('product_id', $products)->update(['status' => 1]);
     }
     
     
     /**
-     * @param $products - Should be array or integer.
+     * @param      $query
+     * @param null $products - Should be array or integer.
      *
      * @return mixed
      */
-    public function deactivate($products)
+    public function scopeDeactivate($query, $products = null)
     {
-        if (is_array($products)) {
-            return $this->whereIn('product_id', $products)->update(['status' => 0]);
+        if ( ! $products) {
+            return $query->update(['status' => 0]);
         }
         
-        return $this->where('product_id', $products)->update(['status' => 0]);
+        if (is_array($products) || is_a($products, Collection::class)) {
+            return $query->whereIn('product_id', $products)->update(['status' => 0]);
+        }
+        
+        return $query->where('product_id', $products)->update(['status' => 0]);
     }
     
 }
