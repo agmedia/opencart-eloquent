@@ -7,57 +7,124 @@
 
 namespace Agmedia\Helpers;
 
-
 class Log
 {
     
     /**
-     * @param        $message
-     * @param string $filename
+     * @var string
      */
-    public static function error($message, $filename = '')
+    public static $env = 'local';
+    
+    
+    /**
+     * @return string
+     */
+    public static function getEnv()
     {
-        return self::catalog($message, 'error_' . $filename);
+        return self::$env;
     }
     
     
     /**
-     * @param        $message
-     * @param string $filename
+     * @param string $env
      */
-    public static function warning($message, $filename = '')
+    public static function setEnv($env)
     {
-        return self::catalog($message, 'warning_' . $filename);
+        self::$env = $env;
     }
     
     
     /**
-     * @param        $message
-     * @param string $filename
+     * @param $message
      */
-    public static function notice($message, $filename = '')
+    public static function error($message)
     {
-        return self::catalog($message, 'notice_' . $filename);
+        return self::log($message, 'ERROR');
     }
     
     
     /**
-     * @param        $message
-     * @param string $filename
+     * @param $message
      */
-    public static function info($message, $filename = '')
+    public static function warning($message)
     {
-        return self::catalog($message, 'info_' . $filename);
+        return self::log($message, 'WARNING');
     }
     
     
     /**
+     * @param $message
+     */
+    public static function info($message)
+    {
+        return self::log($message, 'INFO');
+    }
+    
+    
+    /**
+     * @param $message
+     */
+    public static function debug($message)
+    {
+        return self::log($message, 'DEBUG');
+    }
+    
+    
+    /**
+     * Deprecated function.
+     * Should not be used.
+     *
      * @param        $message
      * @param string $filename
+     *
+     * @return mixed
      */
-    public static function debug($message, $filename = '')
+    public static function write($message, $filename = 'agmedia')
     {
-        return self::catalog($message, 'debug_' . $filename);
+        $handle = fopen(DIR_LOGS . $filename . '.log', 'a');
+        fwrite($handle, self::resolveStringStart('DEBUG') . print_r($message, true) . "\n");
+        fclose($handle);
+    }
+    
+    
+    /**
+     * Logs the data with year/month/ folders and
+     * day concat to file name.
+     *
+     * @param        $message
+     * @param string $type
+     */
+    private static function log($message, $type)
+    {
+        $year  = date('Y');
+        $month = date('m');
+        $day   = date('d');
+        $path  = DIR_LOGS . $year . '/';
+        
+        if ( ! is_dir($path . $month)) {
+            mkdir($path . $month, 0755, true);
+        }
+        
+        $filename = 'log';
+        
+        $handle = fopen($path . $month . '/' . $filename . '_' . $day . '.log', 'a');
+        fwrite($handle, self::resolveStringStart($type) . print_r($message, true) . "\n");
+        fclose($handle);
+    }
+    
+    
+    /**
+     * Deprecated function.
+     * Should not be used.
+     *
+     * @param        $message
+     * @param string $filename
+     *
+     * @return mixed
+     */
+    public static function store($message, $filename = 'store')
+    {
+        return self::write($message, $filename);
     }
     
     
@@ -69,64 +136,17 @@ class Log
      */
     public static function test($message, $filename = 'test')
     {
-        $handle = fopen(DIR_LOGS . $filename . '.log', 'a');
-        fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
-        fclose($handle);
+        return self::write($message, $filename);
     }
     
     
     /**
-     * Logs the data with year/month/ folders and
-     * day concat to file name.
+     * @param $type
      *
-     * @param        $message
-     * @param string $filename
+     * @return string
      */
-    public static function catalog($message, $filename = 'agmedia')
+    private static function resolveStringStart($type)
     {
-        $year  = date('Y');
-        $month = date('m');
-        $day   = date('d');
-        
-        $path = DIR_LOGS . $year . '/';
-        
-        if ( ! is_dir($path . $month)) {
-            mkdir($path . $month, 0755, true);
-        }
-        
-        $handle = fopen($path . $month . '/' . $filename . '_' . $day . '.log', 'a');
-        
-        fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
-        fclose($handle);
-    }
-    
-    
-    /**
-     * Deprecated function.
-     * Should not be used.
-     *
-     * @param        $message
-     * @param string $filename
-     *
-     * @return mixed
-     */
-    public function write($message, $filename = 'write')
-    {
-        return $this->write($message, $filename);
-    }
-    
-    
-    /**
-     * Deprecated function.
-     * Should not be used.
-     *
-     * @param        $message
-     * @param string $filename
-     *
-     * @return mixed
-     */
-    public function store($message, $filename = 'store')
-    {
-        return $this->write($message, $filename);
+        return '[' . date('Y-m-d G:i:s') . '] ' . self::getEnv() . '.' . $type . ': ';
     }
 }
