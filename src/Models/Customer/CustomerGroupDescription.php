@@ -10,11 +10,6 @@ class CustomerGroupDescription extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'customer_group_description';

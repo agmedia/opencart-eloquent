@@ -10,11 +10,6 @@ class ProductSpecial extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'product_special';

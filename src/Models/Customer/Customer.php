@@ -10,11 +10,6 @@ class Customer extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'customer';

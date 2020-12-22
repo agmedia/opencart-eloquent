@@ -11,11 +11,6 @@ class OrderOption extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'order_option';

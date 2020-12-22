@@ -10,11 +10,6 @@ class Manufacturer extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'manufacturer';

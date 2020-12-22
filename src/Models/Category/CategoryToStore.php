@@ -10,11 +10,6 @@ class CategoryToStore extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'category_to_store';

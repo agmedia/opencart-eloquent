@@ -10,11 +10,6 @@ class ProductDescription extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'product_description';

@@ -10,11 +10,6 @@ class SeoUrl extends Model
 {
     
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * @var string
      */
     protected $table = 'seo_url';
